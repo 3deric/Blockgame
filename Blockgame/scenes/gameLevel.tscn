@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://dk11w7ogqig7f"]
+
+[ext_resource type="Script" path="res://scripts/gameLogic.gd" id="1_kjsau"]
+[ext_resource type="PackedScene" uid="uid://cx8nekcu4cmbx" path="res://prefabs/instanceTest.tscn" id="2_c527s"]
+[ext_resource type="Texture2D" uid="uid://gtfwsgimqbp1" path="res://textures/bg.png" id="3_fk3ep"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_sq16m"]
+
+[node name="scene" type="Node2D"]
+script = ExtResource("1_kjsau")
+instanceScene = ExtResource("2_c527s")
+speed = 300.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(0, -200)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(0, 101)
+scale = Vector2(3.14, 0.495)
+texture = ExtResource("3_fk3ep")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("WorldBoundaryShape2D_sq16m")

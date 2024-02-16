@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cx8nekcu4cmbx"]
+
+[ext_resource type="Texture2D" uid="uid://cg786n2qby8l3" path="res://textures/square.png" id="1_f520m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6ow6u"]
+size = Vector2(84, 84)
+
+[node name="instanceTest" type="RigidBody2D"]
+freeze = true
+freeze_mode = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6ow6u")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.21, 0.21)
+texture = ExtResource("1_f520m")
