@@ -1,7 +1,8 @@
 extends Node2D
 
 @export var instanceScene: Resource = null
-@export var speed: float = 10
+@export var rotationSpeed: float = 10
+@export var movementSpeed: float = 10
 
 var playing = false
 var time = 0.0
@@ -9,24 +10,49 @@ var instance = null
 var instances = []
 
 var input = 0
+var positionX: float = 0
+var speedX: float = 0
+var speedRot : float = 0
+var rot: float = 0
+
+var floorLeft = null
+var floorRight = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	playing = true
-
+	_initLevel()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	time += delta
-	if (Input.is_action_just_pressed("placeInstance")):
-		_releaseInstance()
+	_inputHandler()
+	_gameLoop(delta)
+
+func _initLevel():
+	return
+
+func _gameLoop(delta):
+	if playing == true:
+		time += delta
 	
 	if (instance == null and time > 1.0):
 		_placeInstance()
-		
-	input = int(Input.is_action_pressed("moveRight")) - int(Input.is_action_pressed("moveLeft"))
 	
 	_movement(delta)
+	_rotation(delta)
 
+func _inputHandler():
+	if (Input.is_action_just_pressed("debugStartGame")):
+		_startGame()
+	if (Input.is_action_just_pressed("debugEndGame")):
+		_endGame()
+	#move instance left and right
+	input = int(Input.is_action_pressed("moveRight")) - int(Input.is_action_pressed("moveLeft"))
+	#place instance when space key is predded
+	if (Input.is_action_just_pressed("placeInstance")):
+		_releaseInstance()	
+	#rotate instance when alt key is pressed
+	if (Input.is_action_just_pressed("rotateInstance")):
+		rot += PI / 4
+	
 func _placeInstance():
 	if(playing == false or instance != null):
 		return
@@ -37,12 +63,18 @@ func _placeInstance():
 func _movement(delta):
 	if(instance == null):
 		return
-	#var posX = instance.position.x
-	#var targetX = posX + input
-	#spdX = lerp(spdX,(targetX - posX) * 0.5, delta * 25)
-	#print (spdX)
-	instance.position.x += input * delta * speed
+	positionX += input * delta * movementSpeed
+	var currentPositionX = instance.position.x
+	speedX = lerp(speedX, (positionX - currentPositionX) * 0.05, delta * 2)
+	instance.position.x += speedX
 
+func _rotation(delta):
+	if(instance == null):
+		return
+	var currentRotation = instance.rotation
+	speedRot = lerp(speedRot, (rot - currentRotation) * 0.1, delta *10)
+	instance.rotation += speedRot
+	
 func _releaseInstance():
 	if(instance == null):
 		return
@@ -55,3 +87,18 @@ func _releaseInstance():
 	#remove instance from active
 	instance = null	
 	time = 0.0
+	positionX = 0
+	speedX = 0
+	speedRot = 0
+	rot = 0
+
+func _startGame():
+	playing = true
+	time = 0.0
+	return
+
+func _endGame():
+	playing = false
+	for placedInstance in instances:
+		remove_child(placedInstance)
+	remove_child(instance)

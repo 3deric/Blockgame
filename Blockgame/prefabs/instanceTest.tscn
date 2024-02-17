@@ -8,6 +8,7 @@ size = Vector2(84, 84)
 [node name="instanceTest" type="RigidBody2D"]
 freeze = true
 freeze_mode = 1
+continuous_cd = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_6ow6u")
