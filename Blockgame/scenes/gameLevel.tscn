@@ -1,15 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://dk11w7ogqig7f"]
+[gd_scene load_steps=7 format=3 uid="uid://dk11w7ogqig7f"]
 
 [ext_resource type="Script" path="res://scripts/gameLogic.gd" id="1_kjsau"]
 [ext_resource type="PackedScene" uid="uid://cx8nekcu4cmbx" path="res://prefabs/instanceTest.tscn" id="2_c527s"]
 [ext_resource type="Texture2D" uid="uid://gtfwsgimqbp1" path="res://textures/bg.png" id="3_fk3ep"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_e2bu5"]
-a = Vector2(-200, 0)
-b = Vector2(200, 0)
+a = Vector2(-1000, 0)
+b = Vector2(1000, 0)
 
-[sub_resource type="GDScript" id="GDScript_1seh5"]
-script/source = "extends StaticBody2D
+[sub_resource type="GDScript" id="GDScript_pmi10"]
+script/source = "extends Area2D
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -20,6 +21,9 @@ func _ready():
 func _process(delta):
 	pass
 "
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rc4qy"]
+size = Vector2(447, 218)
 
 [node name="scene" type="Node2D"]
 script = ExtResource("1_kjsau")
@@ -39,27 +43,30 @@ texture = ExtResource("3_fk3ep")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2DCenter"]
 shape = SubResource("SegmentShape2D_e2bu5")
 
-[node name="StaticBody2DLeft" type="StaticBody2D" parent="."]
-position = Vector2(-400, 0)
-script = SubResource("GDScript_1seh5")
-
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2DLeft"]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(1, 0.384314, 1, 1)
-position = Vector2(0, 100)
+position = Vector2(-400, 100)
 scale = Vector2(1, 0.5)
 texture = ExtResource("3_fk3ep")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2DLeft"]
-shape = SubResource("SegmentShape2D_e2bu5")
-
-[node name="StaticBody2DRight" type="StaticBody2D" parent="."]
-position = Vector2(400, 0)
-
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2DRight"]
+[node name="Sprite2D2" type="Sprite2D" parent="."]
 modulate = Color(1, 0.384314, 1, 1)
-position = Vector2(0, 100)
+position = Vector2(400, 100)
 scale = Vector2(1, 0.5)
 texture = ExtResource("3_fk3ep")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2DRight"]
-shape = SubResource("SegmentShape2D_e2bu5")
+[node name="Area2D" type="Area2D" parent="."]
+script = SubResource("GDScript_pmi10")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-425, 103)
+shape = SubResource("RectangleShape2D_rc4qy")
+
+[node name="Area2D2" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2"]
+position = Vector2(424.5, 99)
+shape = SubResource("RectangleShape2D_rc4qy")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="Area2D2" to="." method="_on_area_2d_body_entered"]

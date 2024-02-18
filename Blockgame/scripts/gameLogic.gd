@@ -36,6 +36,8 @@ func _gameLoop(delta):
 	if (instance == null and time > 1.0):
 		_placeInstance()
 	
+	if(instance == null or playing == false):
+		return
 	_movement(delta)
 	_rotation(delta)
 
@@ -50,8 +52,10 @@ func _inputHandler():
 	if (Input.is_action_just_pressed("placeInstance")):
 		_releaseInstance()	
 	#rotate instance when alt key is pressed
-	if (Input.is_action_just_pressed("rotateInstance")):
+	if (Input.is_action_just_pressed("rotateLeft")):
 		rot += PI / 4
+	if (Input.is_action_just_pressed("rotateRight")):
+		rot -= PI / 4
 	
 func _placeInstance():
 	if(playing == false or instance != null):
@@ -61,16 +65,12 @@ func _placeInstance():
 	instance.position.y = - 450
 	
 func _movement(delta):
-	if(instance == null):
-		return
 	positionX += input * delta * movementSpeed
 	var currentPositionX = instance.position.x
 	speedX = lerp(speedX, (positionX - currentPositionX) * 0.05, delta * 2)
 	instance.position.x += speedX
 
 func _rotation(delta):
-	if(instance == null):
-		return
 	var currentRotation = instance.rotation
 	speedRot = lerp(speedRot, (rot - currentRotation) * 0.1, delta *10)
 	instance.rotation += speedRot
@@ -95,10 +95,18 @@ func _releaseInstance():
 func _startGame():
 	playing = true
 	time = 0.0
-	return
-
-func _endGame():
-	playing = false
 	for placedInstance in instances:
 		remove_child(placedInstance)
+	instances = []
+	print (instances.size())
 	remove_child(instance)
+
+func _endGame():
+	if playing == true:
+		playing = false
+		print(instances.size())
+
+func _on_area_2d_body_entered(body):
+	print(body)
+	pass # Replace with function body.
+
